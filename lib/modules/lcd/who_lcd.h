@@ -20,6 +20,12 @@
 #define BOARD_LCD_PARAM_BITS 8
 #define LCD_HOST SPI2_HOST
 
+typedef struct{
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+} Lcd_color_t;
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -31,6 +37,14 @@ extern "C"
     void draw_circle(int x0, int y0, int radius, uint16_t color, uint16_t bg_color);
     void app_lcd_draw_wallpaper();
     void app_lcd_set_color(int color);
+    uint16_t color_to_int(Lcd_color_t rgb);
+
+    void set_color_bmp(int color, uint16_t *bitmap);
+    void draw_bitmap(uint16_t *bitmap);
+    void draw_rectangle_bmp(int x, int y, int width, int height, uint16_t color, uint16_t *bitmap);
+    void draw_circle_bmp(int x0, int y0, int radius, uint16_t color, uint16_t *bitmap);
+    
+
 
 #ifdef __cplusplus
 }

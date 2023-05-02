@@ -141,6 +141,20 @@ void app_lcd_set_color(int color)
     }
 }
 
+void draw_bitmap(uint16_t *bitmap){
+    g_lcd.draw_bitmap(0, 0, 240, 240, bitmap);
+}
+
+void set_color_bmp(int color, uint16_t *bitmap){
+    scr_info_t lcd_info;
+    g_lcd.get_info(&lcd_info);
+    for (int i = 0; i < 240; i++){
+        for(int j = 0; j < 240; j++){
+            bitmap[i*240 + j] = color;
+        }
+    }
+}
+
 
 void draw_rectangle(int x, int y, int width, int height, uint16_t color){
   uint16_t *bitmap = (uint16_t *) malloc((width * height) * sizeof(uint16_t));
@@ -153,6 +167,14 @@ void draw_rectangle(int x, int y, int width, int height, uint16_t color){
   g_lcd.draw_bitmap(x, y, width, height, bitmap);
 
   free(bitmap);
+}
+
+void draw_rectangle_bmp(int x, int y, int width, int height, uint16_t color, uint16_t *bitmap){
+    for(int i = y; i < (y + height); i++){
+        for (int j = x; j < (x + width); j++){
+            bitmap[i*240 + j] = color;
+        }
+    }
 }
 
 void draw_circle(int x0, int y0, int radius, uint16_t color, uint16_t bg_color){
@@ -172,4 +194,19 @@ void draw_circle(int x0, int y0, int radius, uint16_t color, uint16_t bg_color){
   g_lcd.draw_bitmap(x0 - radius, y0 - radius, 2*radius, 2*radius, bitmap);
   
   free(bitmap);
+}
+
+void draw_circle_bmp(int x0, int y0, int radius, uint16_t color, uint16_t *bitmap){
+    for(int i = (y0 - radius); i < (y0 + radius); i++){
+        for(int j = (x0 - radius); j < (x0 + radius); j++){
+            if(((j - x0)*(j - x0) + (i - y0)*(i - y0) - radius*radius ) <= 0){
+                bitmap[i*240 + j] = color;
+            }
+        }
+    }
+}
+
+uint16_t color_to_int(Lcd_color_t rgb){
+    uint16_t color = (rgb.blue % 32) << 8 | (rgb.red % 32) << 3 | (rgb.green % 8);
+    return color;
 }
